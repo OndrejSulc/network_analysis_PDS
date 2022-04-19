@@ -1,5 +1,6 @@
 from PacketModel import *
 from scapy.all import *
+import json
 
 # tshark -2 -R "iec60870_104" -r mega104-17-12-18.pcapng -w pokus2.pcapng
 # editcap -c 44196 packetsOfInterest.pcapng out.pcapng
@@ -37,8 +38,16 @@ allPackets.pop(-1)
 #split packets into 'FROM' and 'TO' sets
 Direction_Models = DirectionModel.CreateDirectionModels(allPackets,probeIP)
 
+#create profiles for each direction
 Direction_Models[0].createProfile() #FROM
 Direction_Models[1].createProfile() #TO
+
+FROM_ModelJsonStr = json.dumps(Direction_Models[0].profile.__dict__)
+TO_ModelJsonStr = json.dumps(Direction_Models[1].profile.__dict__)
+
+print(FROM_ModelJsonStr)
+print(TO_ModelJsonStr)
+
 
 #print(len(Direction_Models[0].packets))
 #print(len(Direction_Models[1].packets))
