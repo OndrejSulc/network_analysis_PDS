@@ -40,7 +40,7 @@ Direction_Models = DirectionModel.CreateDirectionModels(allPackets,probeIP)
 Direction_Models[0].createProfile() #FROM
 Direction_Models[1].createProfile() #TO
 
-print(len(Direction_Models[0].packets))
-print(len(Direction_Models[1].packets))
+#print(len(Direction_Models[0].packets))
+#print(len(Direction_Models[1].packets))
 
 
