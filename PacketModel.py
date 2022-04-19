@@ -1,50 +1,97 @@
-from asyncio.windows_events import NULL
 import enum
 from enum import Enum
 from operator import mod
-import this
 from scapy.all import *
+
+#Time window length in seconds
+TIME_WINDOWS_LENGTH = 300
+
 
 class Direction(Enum):
   TO = 0
   FROM = 1
 
-class TimeWindow:
-
-  def __init__(self, id):
-    self.id = id
-    self.packets = []
-
-  def addPacket(packet):
-    this.packets.append(packet)
-  
-
-
+#########################################
 class PacketModel:
 
-  def __init__(self, deltaT, direction, packet):
+  def __init__(self, deltaT, packet):
     self.deltaT = deltaT
-    self.direction = direction
     self.packet = packet
 
-  def insertIntoTimeWindow(time_window):
+  def insertIntoTimeWindow(self, time_window):
     this.time_window = time_window
     time_window.addPacket(this)
+#########################################
+
+
+#########################################
+class TimeWindow:
+  def __init__(self):
+    self.total_packets_count = 0
+    self.lower_region_count = 0
+    self.upper_region_count = 0
+
+    self.packets = []
+
+
+  def addPacket(self, packet):
+    this.packets.append(packet)
+
+
+  def CreateTimeWindows(packets_array, time_window_length):
+    TimeWindows = [TimeWindow()]
+    elapsedTime = 0
     
+    for i in range( len(packets_array)-1 ):
+      elapsedTime += packets_array[i].deltaT
+      if(elapsedTime > time_window_length):
+          TimeWindows.append( TimeWindow() )
+          elapsedTime -= time_window_length
 
-def BestSplitPoint( directionArray, time_windows_length ):
-  deltaTarray = []
-  for model in directionArray:
-    deltaTarray.append(model.deltaT)
-
-  deltaTarray.sort()
-
-
+      packets_array[i].insertIntoTimeWindow( TimeWindows[-1] )
     
+    return TimeWindows
+#########################################
+   
 
-def determineDirection ( probeIPaddr, packet):
-  if(packet[IP].src == probeIPaddr):
-    return Direction.FROM
-  
-  else:
-    return Direction.TO
+#########################################
+class DirectionModel:
+
+  def __init__(self, direction,packets):
+    self.direction = direction
+    self.packets = packets
+
+
+  def createProfile(self):
+    pass
+
+
+  def bestSplitPoint(self, directionArray, time_windows_length ):
+    deltaTarray = []
+    for model in directionArray:
+      deltaTarray.append(model.deltaT)
+
+    deltaTarray.sort()
+
+
+  # STATIC ------------
+  def CreateDirectionModels(allPackets, probeIPaddr):
+    TOset = []
+    FROMset = []
+    for i in range( len(allPackets) ):
+      direction = DirectionModel.DetermineDirection(probeIPaddr, allPackets[i]) 
+      if( direction == Direction.TO):
+          TOset.append(allPackets[i])
+      else:
+          FROMset.append(allPackets[i])
+
+    dir_models_array = [DirectionModel(Direction.FROM, FROMset), DirectionModel(Direction.TO, TOset)]
+    return dir_models_array
+
+
+  def DetermineDirection ( probeIPaddr, packet):
+    if(packet.packet[IP].src == probeIPaddr):
+      return Direction.FROM
+    
+    else:
+      return Direction.TO
