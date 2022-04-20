@@ -86,9 +86,28 @@ def create_profile_of_communication():
    print(ModelsJSON)
 
 
+def print_help():
+   print("""Help:
+-p  <learn.pcapng> <probeIP>                           Na standardní výstup vypíše JSON s profily komunikace v daném souboru. Pomocí probeIP určuje směr.
+
+-t  <profile.json> <soubor.pcapng> <probeIPv4> [-g]    Provede test zda komunikace v souboru odpovídá profilu. Test provadí pro každé okno samostatně. (-g zobrazení grafů)
+
+-t3 <profile.json> <soubor.pcapng> <probeIPv4> [-g]    Provede test zda komunikace v souboru odpovídá profilu. Test provadí pro sekvence 3 oken. (-g zobrazení grafů)
+
+-f  <soubor.pcapng> <out.pcapng>                       Ze souboru vyfiltruje IEC komunikaci a uloží ji do výstupního souboru.
+
+-h                                                     Vypíše tento text
+
+Například: 
+   $ python3 xsulco01_pds.py -p learn.pcapng 192.168.11.248 >learnProfiles.json
+   $ python3 xsulco01_pds.py -t3 learnProfiles.json test.pcapng 192.168.11.248 -g
+""")
 
 if __name__ == "__main__":
-   if( sys.argv[1] == "-p"):
+   if(len(sys.argv) == 1):
+      print_help()
+
+   elif( sys.argv[1] == "-p"):
       create_profile_of_communication()
 
    elif( sys.argv[1] == "-t" or sys.argv[1] == "-t3" ):
@@ -100,17 +119,8 @@ if __name__ == "__main__":
    else:
       if(sys.argv[1] != "-h"):
          print("unknown parameter ",sys.argv[1])
+      print_help()
 
-      print("""Help:
--p  <learn.pcapng> <probeIP>                         Na standardní výstup vypíše JSON s profily komunikace v daném souboru. Pomocí probeIP určuje směr.
-
--t  <profile.json> <soubor.pcapng> <probeIP> [-g]    Provede test zda komunikace v souboru odpovídá profilu. Test provadí pro každé okno samostatně. (-g zobrazení grafů)
-
--t3 <profile.json> <soubor.pcapng> <probeIP> [-g]    Provede test zda komunikace v souboru odpovídá profilu. Test provadí pro sekvence 3 oken. (-g zobrazení grafů)
-
--f  <soubor.pcapng> <out.pcapng>                     Ze souboru vyfiltruje IEC komunikaci a uloží ji do výstupního souboru.
-
--h                                                   Vypíše tento text
-""")
+      
 
 
