@@ -32,9 +32,6 @@ class PacketModel:
 
         allPackets.append( PacketModel(0, processedPacket) ) 
     
-
-
-
     #calculate deltaT for each packet, assignTimeWindow + drop last packet (no deltaT)
     for i in range( len(allPackets)-1 ):
         allPackets[i].deltaT = allPackets[i+1].packet.time - allPackets[i].packet.time 
@@ -165,7 +162,7 @@ class DirectionModel:
                            (mean_LR - 3*std_LR),
                            (mean_LR + 3*std_LR),
                            (mean_UR - 3*std_UR),
-                           (mean_UR + 3*std_LR))
+                           (mean_UR + 3*std_UR))
 
 
   def calcBestSplitPoint(self):

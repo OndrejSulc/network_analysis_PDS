@@ -45,6 +45,13 @@ def test_communication_profile():
       plot_total_packets_count(Direction_Models[0], FROM_profile, FROM_profile.direction)
       plot_total_packets_count(Direction_Models[1], TO_profile, TO_profile.direction)
 
+      plot_lower_region_count(Direction_Models[0], FROM_profile, FROM_profile.direction)
+      plot_lower_region_count(Direction_Models[1], TO_profile, TO_profile.direction)
+
+      plot_upper_region_count(Direction_Models[0], FROM_profile, FROM_profile.direction)
+      plot_upper_region_count(Direction_Models[1], TO_profile, TO_profile.direction)
+
+
 
    
 
