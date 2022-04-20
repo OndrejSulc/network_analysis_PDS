@@ -1,55 +1,104 @@
-from PacketModel import *
+from Models import *
+from Plotting import *
 from scapy.all import *
 import json
 
-# tshark -2 -R "iec60870_104" -r mega104-17-12-18.pcapng -w pokus2.pcapng
-# editcap -c 44196 packetsOfInterest.pcapng out.pcapng
+def filter_communication():
+   inFile = sys.argv[2]
+   outFile = sys.argv[3]
 
-#Process file
-#first argument is capture file
-"""PcapFile = sys.argv[1]
-result = os.system("tshark -Y iec60870_104 -r {} -w packetsOfInterest.pcapng".format(PcapFile))
-if(result != 0):
-   exit(1)"""
-
-
-
-#specify learn file and parameters
-reader = PcapReader("learn.pcapng") 
-probeIP = sys.argv[2]
+   result = os.system("tshark -Y iec60870_104 -r {} -w {}".format(inFile, outFile))
+   if(result != 0):
+      print("Chyba při využití programu tshark.")
+      exit(1)
+   else:
+      print("Soubor {} vytvořen.".format(outFile))
 
 
-#filter packet not containting probes IP + prepare PacketModels
-allPackets = []
-for processedPacket in reader:
-   if(processedPacket[IP].src != probeIP and processedPacket[IP].dst != probeIP):
-      continue
 
-   allPackets.append( PacketModel(0, processedPacket) ) #determineDirection(probeIPaddr=probeIP, packet=processedPacket)
+def test_communication_profile():
+   profilesFile = open(sys.argv[2],"r")
+   profiles = json.load(profilesFile)
+
+   FROM_profile = Profile(**profiles[0])
+   TO_profile = Profile(**profiles[1])
+
+   reader = PcapReader(sys.argv[3]) 
+   probeIP = sys.argv[4]
+
+   allPackets = PacketModel.CreatePacketModels(reader,probeIP)
+
+   if(len(allPackets) == 0):
+      print("Seznam packetů po filtrování probeIP je prázdný.")
+      return
+
+   #split packets into 'FROM' and 'TO' sets
+   Direction_Models = DirectionModel.CreateDirectionModels(allPackets,probeIP)
+
+   print(FROM_profile.direction, Direction_Models[0].direction)
+   detect_anomallies(sys.argv[1], Direction_Models[0], FROM_profile)
+
+   print(TO_profile.direction, Direction_Models[1].direction)
+   detect_anomallies(sys.argv[1], Direction_Models[1], TO_profile)
+
+   if(sys.argv[5] == "-g"):
+      plot_total_packets_count(Direction_Models[0], FROM_profile, FROM_profile.direction)
+      plot_total_packets_count(Direction_Models[1], TO_profile, TO_profile.direction)
 
 
-#calculate deltaT for each packet, assignTimeWindow + drop last packet (no deltaT)
-for i in range( len(allPackets)-1 ):
-   allPackets[i].deltaT = allPackets[i+1].packet.time - allPackets[i].packet.time 
-
-allPackets.pop(-1)
+   
 
 
-#split packets into 'FROM' and 'TO' sets
-Direction_Models = DirectionModel.CreateDirectionModels(allPackets,probeIP)
 
-#create profiles for each direction
-Direction_Models[0].createProfile() #FROM
-Direction_Models[1].createProfile() #TO
+def create_profile_of_communication():
 
-FROM_ModelJsonStr = json.dumps(Direction_Models[0].profile.__dict__)
-TO_ModelJsonStr = json.dumps(Direction_Models[1].profile.__dict__)
+   #specify learn file and parameters
+   reader = PcapReader(sys.argv[2]) 
+   probeIP = sys.argv[3]
 
-print(FROM_ModelJsonStr)
-print(TO_ModelJsonStr)
+   allPackets = PacketModel.CreatePacketModels(reader,probeIP)
+
+   if(len(allPackets) == 0):
+      print("Seznam packetů po filtrování probeIP je prázdný.")
+      return
+
+   #split packets into 'FROM' and 'TO' sets
+   Direction_Models = DirectionModel.CreateDirectionModels(allPackets,probeIP)
+
+   #create profiles for each direction
+   Direction_Models[0].createProfile() #FROM
+   Direction_Models[1].createProfile() #TO
+
+   ModelsJSON = json.dumps( [ Direction_Models[0].profile.__dict__, Direction_Models[1].profile.__dict__] )
+
+   print(ModelsJSON)
 
 
-#print(len(Direction_Models[0].packets))
-#print(len(Direction_Models[1].packets))
+
+if __name__ == "__main__":
+   if( sys.argv[1] == "-p"):
+      create_profile_of_communication()
+
+   elif( sys.argv[1] == "-t" or sys.argv[1] == "-t3" ):
+      test_communication_profile()
+   
+   elif( sys.argv[1] == "-f"):
+      filter_communication()
+   
+   else:
+      if(sys.argv[1] != "-h"):
+         print("unknown parameter ",sys.argv[1])
+
+      print("""Help:
+-p  <learn.pcapng> <probeIP>                         Na standardní výstup vypíše JSON s profily komunikace v daném souboru. Pomocí probeIP určuje směr.
+
+-t  <profile.json> <soubor.pcapng> <probeIP> [-g]    Provede test zda komunikace v souboru odpovídá profilu. Test provadí pro každé okno samostatně. (-g zobrazení grafů)
+
+-t3 <profile.json> <soubor.pcapng> <probeIP> [-g]    Provede test zda komunikace v souboru odpovídá profilu. Test provadí pro sekvence 3 oken. (-g zobrazení grafů)
+
+-f  <soubor.pcapng> <out.pcapng>                     Ze souboru vyfiltruje IEC komunikaci a uloží ji do výstupního souboru.
+
+-h                                                   Vypíše tento text
+""")
 
 
