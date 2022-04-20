@@ -153,7 +153,8 @@ class DirectionModel:
     mean_LR = np.mean(LR_array)
 
     std_UR = np.std(UR_array)
-    mean_UR = np.std(UR_array)
+    mean_UR = np.mean(UR_array)
+
 
     self.profile = Profile(("TO" if self.direction == Direction.TO else "FROM"),
                            self.split_point,
@@ -215,10 +216,10 @@ class DirectionModel:
       else:
         return mean_UR, std_UR
     
-    elif(condition_LR and not(condition_UR)):
+    elif(condition_LR):
       return mean_LR, std_LR
 
-    elif(not condition_LR and condition_UR):
+    elif(condition_UR):
       return mean_UR, std_UR
     
     else:

@@ -6,8 +6,8 @@
         "total_number_of_packets_upper_bound": 43.246966092187584,
         "lower_region_lower_bound": 0.4911885104713729,
         "lower_region_upper_bound": 29.024436489528625,
-        "upper_region_lower_bound": -3.4536104853502927,
-        "upper_region_upper_bound": 6.907220970700585
+        "upper_region_lower_bound": 9.578373334474561,
+        "upper_region_upper_bound": 19.939204790525437
     },
     {
         "direction": "TO",
@@ -16,7 +16,7 @@
         "total_number_of_packets_upper_bound": 43.605978822408154,
         "lower_region_lower_bound": 1.8229292676801023,
         "lower_region_upper_bound": 39.41722821263486,
-        "upper_region_lower_bound": -3.095827784018249,
-        "upper_region_upper_bound": 6.191655568036497
+        "upper_region_lower_bound": 2.2322425759411306,
+        "upper_region_upper_bound": 11.519725927995877
     }
 ]
