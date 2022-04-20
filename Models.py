@@ -65,16 +65,16 @@ class Profile:
     tw.gatherCharacteristics(self.split_point)
 
     if( not (self.total_number_of_packets_lower_bound < tw.total_packets_count and tw.total_packets_count < self.total_number_of_packets_upper_bound)):
-      return False
+      return True
     
     elif( not( self.lower_region_lower_bound < tw.lower_region_count and tw.lower_region_count < self.lower_region_upper_bound)):
-      return False
+      return True
     
     elif( not( self.upper_region_lower_bound < tw.upper_region_count and tw.upper_region_count < self.upper_region_upper_bound)):
-      return False
+      return True
 
     else:
-      return True
+      return False
 #########################################
 
 
@@ -254,7 +254,7 @@ def detect_anomallies(type_of_detection, model, profile):
   FROM_detectionArray = []
 
   for tw in model.time_windows:
-        FROM_detectionArray.append(profile.tw_contains_anomaly(tw) == False )
+        FROM_detectionArray.append(profile.tw_contains_anomaly(tw))
 
   if(type_of_detection == "-t"):
       for detectionI in range(len( FROM_detectionArray )):

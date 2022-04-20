@@ -35,13 +35,22 @@ def test_communication_profile():
    #split packets into 'FROM' and 'TO' sets
    Direction_Models = DirectionModel.CreateDirectionModels(allPackets,probeIP)
 
+   for tw in Direction_Models[0].time_windows:
+        tw.gatherCharacteristics(FROM_profile.split_point)
+   
+   for tw in Direction_Models[1].time_windows:
+        tw.gatherCharacteristics(TO_profile.split_point)
+
    print(FROM_profile.direction, Direction_Models[0].direction)
    detect_anomallies(sys.argv[1], Direction_Models[0], FROM_profile)
 
    print(TO_profile.direction, Direction_Models[1].direction)
    detect_anomallies(sys.argv[1], Direction_Models[1], TO_profile)
 
-   if(sys.argv[5] == "-g"):
+   if( len(sys.argv) == 6 and sys.argv[5] == "-g"):
+      plot_number_of_packets_in_time_windows(Direction_Models[0], FROM_profile.direction)
+      plot_number_of_packets_in_time_windows(Direction_Models[1],TO_profile.direction)
+
       plot_total_packets_count(Direction_Models[0], FROM_profile, FROM_profile.direction)
       plot_total_packets_count(Direction_Models[1], TO_profile, TO_profile.direction)
 
@@ -50,10 +59,6 @@ def test_communication_profile():
 
       plot_upper_region_count(Direction_Models[0], FROM_profile, FROM_profile.direction)
       plot_upper_region_count(Direction_Models[1], TO_profile, TO_profile.direction)
-
-
-
-   
 
 
 
