@@ -1,7 +1,5 @@
-import enum
 import numpy as np
 from enum import Enum
-from operator import mod
 from scapy.all import *
 
 
@@ -223,7 +221,7 @@ class DirectionModel:
       return mean_UR, std_UR
     
     else:
-      return 0
+      return 0,0
 
 
   # STATIC ------------
@@ -260,7 +258,7 @@ def detect_anomallies(type_of_detection, model, profile):
   if(type_of_detection == "-t"):
       for detectionI in range(len( FROM_detectionArray )):
         if(FROM_detectionArray[detectionI]):
-            print("Anomálie detekována ve {}. časovém okně. Čas: {}".format(detectionI,detectionI*TIME_WINDOWS_LENGTH))
+            print("Anomálie detekována. Směr: {}   Časové okno: {}   Čas: {}".format(model.direction,detectionI,detectionI*TIME_WINDOWS_LENGTH))
 
   else:
       anomalyCounter = 0
@@ -271,5 +269,5 @@ def detect_anomallies(type_of_detection, model, profile):
             anomalyCounter = 0
 
         if(anomalyCounter == 3):
-            print("Anomálie detekována ve {}. časovém okně. Čas: {}".format(detectionI-3,(detectionI-3)*TIME_WINDOWS_LENGTH))
+            print("Anomálie detekována. Směr: {}   Časové okno: {}   Čas: {}".format(model.direction,detectionI-3,(detectionI-3)*TIME_WINDOWS_LENGTH))
             anomalyCounter = 0

@@ -2,21 +2,21 @@
     {
         "direction": "FROM",
         "split_point": 3.5976046323776245,
-        "total_number_of_packets_lower_bound": 15.786237032812414,
-        "total_number_of_packets_upper_bound": 43.246966092187584,
-        "lower_region_lower_bound": 0.4911885104713729,
-        "lower_region_upper_bound": 29.024436489528625,
-        "upper_region_lower_bound": 9.578373334474561,
-        "upper_region_upper_bound": 19.939204790525437
+        "total_number_of_packets_lower_bound": 44.68300468147415,
+        "total_number_of_packets_upper_bound": 102.75601970876974,
+        "lower_region_lower_bound": 7.54400360016562,
+        "lower_region_upper_bound": 66.17306957056608,
+        "upper_region_lower_bound": 28.179950537120995,
+        "upper_region_upper_bound": 45.5420006823912
     },
     {
         "direction": "TO",
-        "split_point": 6.1865599155426025,
-        "total_number_of_packets_lower_bound": 11.386147161843816,
-        "total_number_of_packets_upper_bound": 43.605978822408154,
-        "lower_region_lower_bound": 1.8229292676801023,
-        "lower_region_upper_bound": 39.41722821263486,
-        "upper_region_lower_bound": 2.2322425759411306,
-        "upper_region_upper_bound": 11.519725927995877
+        "split_point": 4.358113950064686,
+        "total_number_of_packets_lower_bound": 35.65206464620791,
+        "total_number_of_packets_upper_bound": 101.96369890059012,
+        "lower_region_lower_bound": 7.850204399002365,
+        "lower_region_upper_bound": 78.2877266354804,
+        "upper_region_lower_bound": 18.267307249147734,
+        "upper_region_upper_bound": 33.21052526316754
     }
 ]
