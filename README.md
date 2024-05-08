@@ -1,3 +1,7 @@
+# Network analysis
+
+Simple network communication model generator & analysator for university project
+
 Autor:
     Ondřej ŠULC
     xsulco01
